@@ -23,7 +23,7 @@ export async function GET() {
   });
 
   if (!response.ok && response.status === 401) {
-    const refreshResponse = await fetch(`${APP_URL}/api/auth/refresh`, {
+    const refreshResponse = await fetch(`/api/auth/refresh`, {
       method: 'POST',
       headers: { 
         Cookie: cookieStore.getAll()

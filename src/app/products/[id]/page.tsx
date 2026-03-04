@@ -26,7 +26,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const cookieList = cookieStore.getAll();
   const cookieHeader = getCookieHeader(cookieList);
 
-  const response = await fetch(`/api/products?productId=${id}`, {
+  const response = await fetch(`http://localhost:3000/api/products?productId=${id}`, {
     cache: 'no-store',
     headers: { Cookie: cookieHeader },
   });

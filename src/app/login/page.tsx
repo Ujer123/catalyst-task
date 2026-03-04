@@ -14,12 +14,11 @@ export default function Login() {
   const hasCheckedAuth = useRef(false);
 
   useEffect(() => {
-    // Only redirect once, and only if truly logged in
     if (isLoggedIn && !hasCheckedAuth.current) {
       hasCheckedAuth.current = true;
       router.replace('/');
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -5,7 +5,7 @@ import CategoryFilter from '@/components/CategoryFilter';
 import Pagination from '@/components/Pagination';
 import SortDropdown from '@/components/SortDropdown';
 import SearchInput from '@/components/SearchInput';
-import { API_URL, APP_URL } from '@/lib/config';
+import { API_URL } from '@/lib/config';
 
 interface Props {
   searchParams: Promise<{
@@ -34,7 +34,7 @@ async function fetchProducts(category: string, limit: string, skip: string, sort
     q,
   });
 
-  const url = `${APP_URL}/api/products?${params.toString()}`;
+  const url = `http://localhost:3000/api/products?${params.toString()}`;
   
   try {
     const response = await fetch(url, {
