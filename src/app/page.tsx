@@ -1,65 +1,125 @@
-import Image from "next/image";
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import ProductGrid from '@/components/ProductGrid';
+import CategoryFilter from '@/components/CategoryFilter';
+import Pagination from '@/components/Pagination';
+import SortDropdown from '@/components/SortDropdown';
+import SearchInput from '@/components/SearchInput';
 
-export default function Home() {
+interface Props {
+  searchParams: Promise<{
+    category?: string;
+    limit?: string;
+    skip?: string;
+    sortBy?: string;
+    order?: string;
+    q?: string;
+  }>;
+}
+
+function getCookieHeader(cookieList: { name: string; value: string }[]) {
+  return cookieList
+    .map(c => `${c.name}=${encodeURIComponent(c.value)}`)
+    .join('; ');
+}
+
+async function fetchProducts(category: string, limit: string, skip: string, sortBy: string, order: string, q: string, cookieHeader: string) {
+  const params = new URLSearchParams({
+    category,
+    limit,
+    skip,
+    sortBy,
+    order,
+    q,
+  });
+
+  const url = `http://localhost:3000/api/products?${params.toString()}`;
+  
+  const response = await fetch(url, {
+    cache: 'no-store',
+    headers: { Cookie: cookieHeader },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return response.json();
+}
+
+async function fetchCategories() {
+  const response = await fetch('https://dummyjson.com/products/categories');
+  return response.json();
+}
+
+function getPaginationInfo(total: number, skip: string, limit: string) {
+  const totalPages = Math.ceil(total / parseInt(limit));
+  const currentPage = Math.max(1, Math.floor(parseInt(skip) / parseInt(limit)) + 1);
+  return { totalPages, currentPage };
+}
+
+export default async function ProductsPage({ searchParams }: Props) {
+  
+  const params = await searchParams;
+  const category = params.category || '';
+  const limit = params.limit || '9';
+  const skip = params.skip || '0';
+  const sortBy = params.sortBy || 'title';
+  const order = params.order || 'asc';
+  const q = params.q || '';
+
+  const cookieStore = await cookies();
+  const cookieList = cookieStore.getAll();
+  const cookieHeader = getCookieHeader(cookieList);
+
+  const productsData = await fetchProducts(category, limit, skip, sortBy, order, q, cookieHeader);
+
+  if (!productsData) {
+    redirect('/login');
+  }
+
+  const categories = await fetchCategories();
+
+  const { totalPages, currentPage } = getPaginationInfo(
+    productsData.total,
+    productsData.skip,
+    productsData.limit
+  );
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="container mx-auto px-4 py-8 max-w-8xl">
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="lg:w-1/4">
+          <CategoryFilter categories={categories} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="lg:w-3/4">
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center gap-4">
+              <h2 className="text-3xl font-bold">
+                Products ({productsData.total})
+              </h2>
+              <SearchInput />
+            </div>
+            <SortDropdown 
+              currentSortBy={sortBy} 
+              currentOrder={order} 
+              category={category}
+              limit={productsData.limit}
+              skip={productsData.skip}
+            />            
+          </div>
+
+          <ProductGrid products={productsData.products} />
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            category={category}
+            limit={productsData.limit}
+          />
         </div>
-      </main>
+      </div>
     </div>
   );
 }
