@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { API_URL, APP_URL } from '@/lib/config';
+import { API_URL } from '@/lib/config';
 
 async function getJsonData(res: Response) {
   try {

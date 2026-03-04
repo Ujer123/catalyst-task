@@ -34,7 +34,7 @@ async function fetchProducts(category: string, limit: string, skip: string, sort
     q,
   });
 
-  const url = `http://localhost:3000/api/products?${params.toString()}`;
+  const url = `/api/products?${params.toString()}`;
   
   try {
     const response = await fetch(url, {
