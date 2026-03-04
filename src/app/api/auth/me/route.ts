@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { API_URL, APP_URL } from '@/lib/config';
 
 async function getJsonData(res: Response) {
   try {
@@ -17,12 +18,12 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  let response = await fetch('https://dummyjson.com/auth/me', {
+  let response = await fetch(`${API_URL}/auth/me`, {
     headers: { Authorization: `Bearer ${token}` }
   });
 
   if (!response.ok && response.status === 401) {
-    const refreshResponse = await fetch('http://localhost:3000/api/auth/refresh', {
+    const refreshResponse = await fetch(`${APP_URL}/api/auth/refresh`, {
       method: 'POST',
       headers: { 
         Cookie: cookieStore.getAll()
@@ -35,7 +36,7 @@ export async function GET() {
       const refreshData = await getJsonData(refreshResponse);
       if (refreshData?.token) {
         token = refreshData.token;
-        response = await fetch('https://dummyjson.com/auth/me', {
+        response = await fetch(`${API_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
       }

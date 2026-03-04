@@ -1,12 +1,13 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { API_URL } from '@/lib/config';
 
 export async function POST() {
   const cookieStore = await cookies();
   const token = cookieStore.get('dummy_token')?.value;
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const res = await fetch('https://dummyjson.com/auth/refresh', {
+  const res = await fetch(`${API_URL}/auth/refresh`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
   });

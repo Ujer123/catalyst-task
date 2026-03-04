@@ -5,6 +5,7 @@ import CategoryFilter from '@/components/CategoryFilter';
 import Pagination from '@/components/Pagination';
 import SortDropdown from '@/components/SortDropdown';
 import SearchInput from '@/components/SearchInput';
+import { API_URL, APP_URL } from '@/lib/config';
 
 interface Props {
   searchParams: Promise<{
@@ -33,7 +34,7 @@ async function fetchProducts(category: string, limit: string, skip: string, sort
     q,
   });
 
-  const url = `http://localhost:3000/api/products?${params.toString()}`;
+  const url = `${APP_URL}/api/products?${params.toString()}`;
   
   const response = await fetch(url, {
     cache: 'no-store',
@@ -48,7 +49,7 @@ async function fetchProducts(category: string, limit: string, skip: string, sort
 }
 
 async function fetchCategories() {
-  const response = await fetch('https://dummyjson.com/products/categories');
+  const response = await fetch(`${API_URL}/products/categories`);
   return response.json();
 }
 

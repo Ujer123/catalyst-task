@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { API_URL } from '@/lib/config';
 
 export async function GET(req: NextRequest) {
   const cookieStore = await cookies();
@@ -28,16 +29,15 @@ export async function GET(req: NextRequest) {
   let url = '';
 
   if (productId) {
-    // Fetch single product by ID
-    url = `https://dummyjson.com/products/${productId}`;
+    url = `${API_URL}/products/${productId}`;
   } else if (categoryList) {
-    url = 'https://dummyjson.com/products/category-list';
+    url = `${API_URL}/products/category-list`;
   } else if (search) {
-    url = `https://dummyjson.com/products/search?q=${encodeURIComponent(search)}&${queryString}`;
+    url = `${API_URL}/products/search?q=${encodeURIComponent(search)}&${queryString}`;
   } else if (category) {
-    url = `https://dummyjson.com/products/category/${category}?${queryString}`;
+    url = `${API_URL}/products/category/${category}?${queryString}`;
   } else {
-    url = `https://dummyjson.com/products?${queryString}`;
+    url = `${API_URL}/products?${queryString}`;
   }
 
   const response = await fetch(url);
