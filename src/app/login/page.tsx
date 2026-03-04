@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
@@ -11,9 +11,12 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { login, isLoggedIn } = useAuth();
+  const hasCheckedAuth = useRef(false);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    // Only redirect once, and only if truly logged in
+    if (isLoggedIn && !hasCheckedAuth.current) {
+      hasCheckedAuth.current = true;
       router.replace('/');
     }
   }, [isLoggedIn, router]);
