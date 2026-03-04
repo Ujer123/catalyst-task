@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { API_URL } from '@/lib/config';
 
 export async function GET(req: NextRequest) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('dummy_token')?.value;
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
   const searchParams = req.nextUrl.searchParams;
   const category = searchParams.get('category') || '';
   const limit = searchParams.get('limit') || '9';

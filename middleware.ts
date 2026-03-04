@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
 
   if (
     pathname === '/login' || 
+    pathname === '/' ||  // Allow home page without auth
     pathname.startsWith('/_next') || 
     pathname.startsWith('/api') || 
     PUBLIC_FILE.test(pathname)
