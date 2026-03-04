@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
   const response = NextResponse.json({ success: true });
   response.cookies.set('dummy_token', token, {
     httpOnly: true,
-    secure: false,
-    sameSite: 'strict',
+    secure: true,
+    sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7,
     path: '/',
   });

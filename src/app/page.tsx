@@ -36,16 +36,22 @@ async function fetchProducts(category: string, limit: string, skip: string, sort
 
   const url = `${APP_URL}/api/products?${params.toString()}`;
   
-  const response = await fetch(url, {
-    cache: 'no-store',
-    headers: { Cookie: cookieHeader },
-  });
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store',
+      headers: { Cookie: cookieHeader },
+    });
 
-  if (!response.ok) {
+    if (!response.ok) {
+      console.error('API Error:', response.status, response.statusText);
+      return null;
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Fetch error:', error);
     return null;
   }
-
-  return response.json();
 }
 
 async function fetchCategories() {
