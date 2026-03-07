@@ -26,10 +26,10 @@ export default function CartContent() {
   }
 
   return (
-    <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+    <section className="py-8 antialiased md:py-16">
       <div className="mx-auto max-w-7xl px-4 2xl:px-0">
         <div className="gap-4 mb-8 flex">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl flex-1">
+          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl flex-1">
             Shopping Cart ({cart.length} items)
           </h2>
           <Link href="/" className="inline-flex items-center gap-2 text-blue-600 hover:underline font-medium">

@@ -18,7 +18,7 @@ export default function Login() {
       hasCheckedAuth.current = true;
       router.replace('/');
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -16,10 +16,19 @@ export async function POST(req: NextRequest) {
 
   const token = data.token || data.accessToken;
   if (!token || typeof token !== 'string' || token.length === 0) {
-    return NextResponse.json({ error: 'Invalid token from provider' }, { status: 502 });
+    return NextResponse.json({ error: 'Invalid token' }, { status: 502 });
   }
 
-  const response = NextResponse.json({ success: true });
+  const userRes = await fetch(`${API_URL}/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  
+  const userData = userRes.ok ? await userRes.json() : null;
+
+  const response = NextResponse.json({ 
+    success: true,
+    user: userData
+  });
   response.cookies.set('dummy_token', token, {
     httpOnly: true,
     secure: true,
