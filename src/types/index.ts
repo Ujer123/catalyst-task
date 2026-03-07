@@ -54,9 +54,7 @@ export interface PaginationProps {
   currentPage: number;
   totalPages: number;
   category?: string;
-  limit: string;
-  sortBy?: string;
-  order?: string;
+  limit: string | number;
   q?: string;
 }
 

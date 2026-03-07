@@ -61,9 +61,11 @@ async function fetchCategories() {
   return response.json();
 }
 
-function getPaginationInfo(total: number, skip: string, limit: string) {
-  const totalPages = Math.ceil(total / parseInt(limit));
-  const currentPage = Math.max(1, Math.floor(parseInt(skip) / parseInt(limit)) + 1);
+function getPaginationInfo(total: number, skip: number | string, limit: number | string) {
+  const limitNum = Number(limit) || 9;
+  const skipNum = Number(skip) || 0;
+  const totalPages = limitNum === 0 ? 1 : Math.ceil(total / limitNum);
+  const currentPage = limitNum === 0 ? 1 : Math.max(1, Math.floor(skipNum / limitNum) + 1);
   return { totalPages, currentPage };
 }
 
@@ -103,7 +105,7 @@ export default async function ProductsPage({ searchParams }: Props) {
             <CategoryFilter categories={categories} />
             {(category || q) && (
               <Link
-                href="/?category=" 
+                href={`/?limit=${limit}&skip=0&sortBy=${sortBy}&order=${order}`}
                 className="mt-4 inline-block text-sm font-medium text-cyan-600 hover:text-cyan-500"
               >
                 Clear Filters
@@ -142,8 +144,6 @@ export default async function ProductsPage({ searchParams }: Props) {
             totalPages={totalPages}
             category={category}
             limit={productsData.limit}
-            sortBy={sortBy}
-            order={order}
             q={q}
           />
         </main>

@@ -19,10 +19,11 @@ export default function SortDropdown({ currentSortBy, currentOrder, category, q 
     const params = new URLSearchParams(searchParams);
     params.set("sortBy", sortBy);
     params.set("order", order);
-    params.set("skip", "0"); 
+    params.set("skip", "0");
+    params.set("limit", searchParams.get("limit") || "9");
     if (category) params.set("category", category);
-    const q = searchParams.get('q');
-    if (q) params.set('q', q);
+    const qParam = searchParams.get("q");
+    if (qParam) params.set("q", qParam);
     router.push(`/?${params.toString()}`);
   };
 

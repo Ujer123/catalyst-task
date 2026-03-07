@@ -6,8 +6,6 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get('category') || '';
   const limit = searchParams.get('limit') || '9';
   const skip = searchParams.get('skip') || '0';
-  const sortBy = searchParams.get('sortBy') || 'title';
-  const order = searchParams.get('order') || 'asc';
   const search = searchParams.get('q') || '';
   const categoryList = searchParams.get('categoryList') === 'true';
   const productId = searchParams.get('productId');
@@ -15,8 +13,6 @@ export async function GET(req: NextRequest) {
   const queryString = new URLSearchParams({
     limit,
     skip,
-    sortBy,
-    order,
   }).toString();
 
   let url = '';

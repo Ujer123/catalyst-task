@@ -3,16 +3,20 @@ import { Pagination as FlowbitePagination } from "flowbite-react";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PaginationProps } from '@/types';
 
-export default function Pagination({ currentPage, totalPages, category, limit }: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, category, limit, q }: PaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const goToPage = (page: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set('skip', ((page - 1) * parseInt(limit)).toString());
+    const limitNum = typeof limit === 'number' ? limit : parseInt(String(limit), 10) || 9;
+    params.set('limit', String(limitNum));
+    params.set('skip', ((page - 1) * limitNum).toString());
     if (category) params.set('category', category);
-    if (searchParams.get('q')) params.set('q', searchParams.get('q')!);
-    
+    else params.delete('category');
+    if (q) params.set('q', q);
+    else params.delete('q');
+
     router.push(`/?${params.toString()}`);
   };
 

@@ -9,6 +9,7 @@ interface SearchResultsDropdownProps {
   isLoading: boolean;
   searchQuery: string;
   onSelect: () => void;
+  preservedParams?: string;
 }
 
 export default function SearchResultsDropdown({
@@ -16,7 +17,12 @@ export default function SearchResultsDropdown({
   isLoading,
   searchQuery,
   onSelect,
+  preservedParams = "",
 }: SearchResultsDropdownProps) {
+  const queryString = preservedParams
+    ? `${preservedParams}&q=${encodeURIComponent(searchQuery)}`
+    : `q=${encodeURIComponent(searchQuery)}&skip=0`;
+  const baseHref = `/?${queryString}`;
   if (!searchQuery) return null;
 
   return (
@@ -39,17 +45,17 @@ export default function SearchResultsDropdown({
           {results.map((product) => (
             <li key={product.id}>
               <Link
-                href={`/?q=${encodeURIComponent(searchQuery)}&skip=0`}
+                href={baseHref}
                 onClick={onSelect}
                 className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors"
               >
-                <div className="relative w-12 h-12 flex-shrink-0">
+                <div className="relative w-12 h-12 shrink-0">
                   <Image
                     src={product.thumbnail}
                     alt={product.title}
                     fill
-                    className="object-cover rounded"
-                    sizes="48px"
+className="object-cover rounded"
+                  sizes="48px"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -70,7 +76,7 @@ export default function SearchResultsDropdown({
       {results.length > 0 && (
         <div className="p-2 border-t border-gray-200 bg-gray-50">
           <Link
-            href={`/?q=${encodeURIComponent(searchQuery)}&skip=0`}
+            href={baseHref}
             onClick={onSelect}
             className="block text-center text-sm text-cyan-700 hover:text-cyan-800 font-medium"
           >
