@@ -8,7 +8,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <Providers>
       <Header />
-      <main className="min-h-full bg-gray-50">
+      <main>
         <Suspense fallback={<Loading />}>
           {children}
         </Suspense>

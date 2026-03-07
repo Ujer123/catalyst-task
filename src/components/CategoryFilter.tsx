@@ -6,10 +6,6 @@ import { CategoryFilterProps } from "@/types";
 
 function buildCategoryUrl(searchParams: URLSearchParams, category?: string) {
   const params = new URLSearchParams(searchParams);
-  params.set("limit", searchParams.get("limit") || "9");
-  params.set("skip", "0");
-  params.set("sortBy", searchParams.get("sortBy") || "title");
-  params.set("order", searchParams.get("order") || "asc");
   if (category) params.set("category", category);
   else params.delete("category");
   const q = searchParams.get("q");

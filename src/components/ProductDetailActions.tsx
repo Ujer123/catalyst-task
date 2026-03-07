@@ -67,7 +67,7 @@ export default function ProductDetailActions({ product }: ProductDetailActionsPr
       onClick={handleIncrease}
       color="cyan"
       size="sm md:lg"
-      className="w-full md:w-auto text-sm sm:text-base"
+      className="w-full md:w-auto text-sm sm:text-base h-10 "
     >
       Add to Cart
     </Button>

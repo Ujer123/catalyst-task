@@ -8,7 +8,7 @@ export default async function CartPage() {
   if (!token) redirect('/login');
 
   return (
-    <div className="container mx-auto dark:bg-gray-900 bg-white">
+    <div className="container mx-auto">
       
       <CartContent />
     </div>
