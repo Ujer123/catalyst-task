@@ -22,7 +22,7 @@ export async function POST() {
 
   const newToken = data.token || data.accessToken;
   if (!newToken || typeof newToken !== 'string' || newToken.length === 0) {
-    const response = NextResponse.json({ error: 'Invalid token from provider' }, { status: 502 });
+    const response = NextResponse.json({ error: 'Token is invalid' }, { status: 502 });
     response.cookies.delete('dummy_token');
     return response;
   }

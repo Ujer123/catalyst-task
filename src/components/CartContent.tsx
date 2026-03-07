@@ -16,7 +16,7 @@ export default function CartContent() {
         <h2 className="text-2xl font-bold text-gray-700 mb-2">Your cart is empty</h2>
         <p className="text-gray-500 mb-8">Add some products to get started</p>
         <Link 
-          href="/products" 
+          href="/" 
           className="inline-block bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
         >
           Start Shopping
@@ -43,7 +43,7 @@ export default function CartContent() {
               {cart.map((item) => (
                 <article key={item.id} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                   <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                    <Link href="#" className="shrink-0 md:order-1">
+                    <div className="shrink-0 md:order-1">
                       {item.images?.[0] ? (
                         <Image 
                           width={80} height={80} 
@@ -55,7 +55,7 @@ export default function CartContent() {
                           <span className="text-2xl">📦</span>
                         </div>
                       )}
-                    </Link>
+                    </div>
 
                     <div className="flex items-center justify-between md:order-3 md:justify-end">
                       <div className="flex items-center space-x-2">
@@ -85,9 +85,9 @@ export default function CartContent() {
                     </div>
 
                     <div className="w-full min-w-0 flex-1 space-y-2 md:order-2 md:max-w-md">
-                      <Link href="#" className="block text-lg font-semibold text-gray-900 hover:underline dark:text-white">
+                      <h4 className="block text-lg font-semibold text-gray-900 hover:underline dark:text-white">
                         {item.title}
-                      </Link>
+                      </h4>
                       <button
                         onClick={() => removeFromCart(item.id)}
                         className="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-500 transition-colors dark:text-red-400"
@@ -123,12 +123,11 @@ export default function CartContent() {
                 </div>
               </div>
 
-              <Link
-                href="/checkout"
+              <button
                 className="w-full block text-center bg-blue-600 text-white py-3 px-6 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl"
               >
                 Proceed to Checkout
-              </Link>
+              </button>
 
               <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <span className="text-sm text-gray-500 dark:text-gray-400">or</span>

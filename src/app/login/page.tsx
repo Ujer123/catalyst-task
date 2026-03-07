@@ -34,14 +34,15 @@ export default function Login() {
       }
     } catch (err) {
       setError('Login failed');
+      console.log('Error in login:', err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[90vh] flex items-center justify-center">
-      <Card className="min-w-sm">
+    <div className="min-h-[90vh] flex items-center justify-center p-4">
+      <Card className="w-full max-w-sm">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           {error && (
             <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
