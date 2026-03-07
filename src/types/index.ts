@@ -55,6 +55,9 @@ export interface PaginationProps {
   totalPages: number;
   category?: string;
   limit: string;
+  sortBy?: string;
+  order?: string;
+  q?: string;
 }
 
 export interface ProductGridProps {

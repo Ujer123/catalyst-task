@@ -7,11 +7,10 @@ interface Props {
   currentSortBy: string;
   currentOrder: string;
   category?: string;
-  limit: string;
-  skip: string;
+  q?: string;
 }
 
-export default function SortDropdown({ currentSortBy, currentOrder, category}: Props) {
+export default function SortDropdown({ currentSortBy, currentOrder, category, q }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 

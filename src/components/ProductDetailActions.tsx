@@ -35,23 +35,23 @@ export default function ProductDetailActions({ product }: ProductDetailActionsPr
 
   if (isInCart) {
     return (
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Button
             onClick={handleDecrease}
             color="cyan"
-            size="lg"
-            className="w-12 h-12 p-0 flex items-center justify-center"
+            size="sm sm:lg"
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 flex items-center justify-center"
             aria-label="Decrease quantity"
           >
             -
           </Button>
-          <span className="text-2xl font-bold w-12 text-center">{quantity}</span>
+          <span className="text-xl sm:text-2xl font-bold w-10 sm:w-12 text-center">{quantity}</span>
           <Button
             onClick={handleIncrease}
             color="cyan"
-            size="lg"
-            className="w-12 h-12 p-0 flex items-center justify-center"
+            size="sm sm:lg"
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 flex items-center justify-center"
             
             aria-label="Increase quantity"
           >
@@ -66,8 +66,8 @@ export default function ProductDetailActions({ product }: ProductDetailActionsPr
     <Button
       onClick={handleIncrease}
       color="cyan"
-      size="lg"
-      className="w-full md:w-auto"
+      size="sm md:lg"
+      className="w-full md:w-auto text-sm sm:text-base"
     >
       Add to Cart
     </Button>

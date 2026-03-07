@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Image from 'next/image';
 import ProductDetailActions from '@/components/ProductDetailActions';
+import ProductImageGallery from '@/components/ProductImageGallery';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -37,24 +37,19 @@ export default async function ProductDetailPage({ params }: Props) {
   }
 
   const data = await response.json();
-  const product = data.product;
+  const product = data.product ?? data;
 
-  if (!product) {
+  if (!product?.id) {
     redirect('/');
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="relative h-96 md:h-[500px] rounded-2xl overflow-hidden bg-gray-100">
-          <Image
-            src={product.thumbnail}
-            alt={product.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <ProductImageGallery 
+          images={product.images}
+          title={product.title}
+        />
         
         <div className="flex flex-col justify-center">
           <span className="text-sm text-gray-500 mb-2">{product.category}</span>
@@ -92,23 +87,6 @@ export default async function ProductDetailPage({ params }: Props) {
 
           <ProductDetailActions product={product} />
 
-          {product.images && product.images.length > 1 && (
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">Product Images</h3>
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {product.images.map((img: string, idx: number) => (
-                  <div key={idx} className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 border-transparent hover:border-cyan-700">
-                    <Image
-                      src={img}
-                      alt={`${product.title} image ${idx + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

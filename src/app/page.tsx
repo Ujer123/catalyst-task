@@ -6,6 +6,7 @@ import Pagination from '@/components/Pagination';
 import SortDropdown from '@/components/SortDropdown';
 import SearchInput from '@/components/SearchInput';
 import { API_URL } from '@/lib/config';
+import Link from 'next/link';
 
 interface Props {
   searchParams: Promise<{
@@ -95,27 +96,43 @@ export default async function ProductsPage({ searchParams }: Props) {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-8xl">
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-1/4">
-          <CategoryFilter categories={categories} />
-        </div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <aside className="lg:col-span-1">
+          <div className="sticky top-20">
+            <CategoryFilter categories={categories} />
+            {(category || q) && (
+              <Link
+                href="/?category=" 
+                className="mt-4 inline-block text-sm font-medium text-cyan-600 hover:text-cyan-500"
+              >
+                Clear Filters
+              </Link>
+            )}
+          </div>
+        </aside>
 
-        <div className="lg:w-3/4">
-          <div className="flex justify-between items-center mb-8">
+        <main className="lg:col-span-3">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
             <div className="flex items-center gap-4">
-              <h2 className="text-3xl font-bold">
-                Products ({productsData.total})
+              <h2 className="text-2xl sm:text-3xl font-bold">
+                Products 
+                <span className="text-gray-500 font-normal">
+                  ({productsData.total})
+                </span>
               </h2>
-              <SearchInput />
             </div>
-            <SortDropdown 
-              currentSortBy={sortBy} 
-              currentOrder={order} 
-              category={category}
-              limit={productsData.limit}
-              skip={productsData.skip}
-            />            
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+              <div className="w-full sm:w-auto">
+                <SearchInput />
+              </div>
+              <SortDropdown 
+                currentSortBy={sortBy} 
+                currentOrder={order} 
+                category={category}
+                q={q}
+              />            
+            </div>
           </div>
 
           <ProductGrid products={productsData.products} />
@@ -125,8 +142,11 @@ export default async function ProductsPage({ searchParams }: Props) {
             totalPages={totalPages}
             category={category}
             limit={productsData.limit}
+            sortBy={sortBy}
+            order={order}
+            q={q}
           />
-        </div>
+        </main>
       </div>
     </div>
   );
