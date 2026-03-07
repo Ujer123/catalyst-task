@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ProductGrid from '@/components/ProductGrid';
 import CategoryFilter from '@/components/CategoryFilter';
@@ -19,41 +18,23 @@ interface Props {
   }>;
 }
 
-function getCookieHeader(cookieList: { name: string; value: string }[]) {
-  return cookieList
-    .map(c => `${c.name}=${encodeURIComponent(c.value)}`)
-    .join('; ');
-}
-
-async function fetchProducts(category: string, limit: string, skip: string, sortBy: string, order: string, q: string, cookieHeader: string) {
-  const params = new URLSearchParams({
-    category,
-    limit,
-    skip,
-    sortBy,
-    order,
-    q,
-  });
-
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const url = `${baseUrl}/api/products?${params.toString()}`;
+async function fetchProducts(category: string, limit: string, skip: string, sortBy: string, order: string, q: string) {
+  const queryParams: Record<string, string> = { limit, skip, sortBy, order };
+  if (q) queryParams.q = q;
   
-  try {
-    const response = await fetch(url, {
-      cache: 'no-store',
-      headers: { Cookie: cookieHeader },
-    });
-
-    if (!response.ok) {
-      console.error('API Error:', response.status, response.statusText);
-      return null;
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error('Fetch error:', error);
-    return null;
+  const queryString = new URLSearchParams(queryParams).toString();
+  
+  let url = `${API_URL}/products`;
+  if (q) {
+    url = `${API_URL}/products/search?${queryString}`;
+  } else if (category) {
+    url = `${API_URL}/products/category/${category}?${queryString}`;
+  } else {
+    url = `${API_URL}/products?${queryString}`;
   }
+  
+  const response = await fetch(url, { cache: 'no-store' });
+  return response.json();
 }
 
 async function fetchCategories() {
@@ -79,11 +60,8 @@ export default async function ProductsPage({ searchParams }: Props) {
   const order = params.order || 'asc';
   const q = params.q || '';
 
-  const cookieStore = await cookies();
-  const cookieList = cookieStore.getAll();
-  const cookieHeader = getCookieHeader(cookieList);
 
-  const productsData = await fetchProducts(category, limit, skip, sortBy, order, q, cookieHeader);
+  const productsData = await fetchProducts(category, limit, skip, sortBy, order, q);
 
   if (!productsData) {
     redirect('/login');

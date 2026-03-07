@@ -9,14 +9,16 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('q') || '';
   const categoryList = searchParams.get('categoryList') === 'true';
   const productId = searchParams.get('productId');
+  const sortBy = searchParams.get('sortBy');
+  const order = searchParams.get('order');
 
-  const queryString = new URLSearchParams({
-    limit,
-    skip,
-  }).toString();
+  const queryParams: Record<string, string> = { limit, skip };
+  if (sortBy) queryParams.sortBy = sortBy;
+  if (order) queryParams.order = order;
+
+  const queryString = new URLSearchParams(queryParams).toString();
 
   let url = '';
-
   if (productId) {
     url = `${API_URL}/products/${productId}`;
   } else if (categoryList) {
@@ -28,6 +30,7 @@ export async function GET(req: NextRequest) {
   } else {
     url = `${API_URL}/products?${queryString}`;
   }
+
 
   const response = await fetch(url);
   const data = await response.json();
