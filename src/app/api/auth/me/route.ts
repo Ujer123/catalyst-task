@@ -33,12 +33,15 @@ export async function GET() {
     });
 
     if (refreshResponse.ok) {
-      const refreshData = await getJsonData(refreshResponse);
-      if (refreshData?.token) {
-        token = refreshData.token;
-        response = await fetch(`${API_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+      const newCookieHeader = refreshResponse.headers.get('set-cookie');
+      if (newCookieHeader) {
+        const newTokenMatch = newCookieHeader.match(/dummy_token=([^;]+)/);
+        if (newTokenMatch) {
+          token = newTokenMatch[1];
+          response = await fetch(`${API_URL}/auth/me`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        }
       }
     }
   }

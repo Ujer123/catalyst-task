@@ -14,9 +14,11 @@ import {
 } from "flowbite-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/hooks/useCart";
 
 export default function Header() {
   const { isLoggedIn, user, logout } = useAuth();
+  const{ cart } = useCart();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -44,13 +46,17 @@ export default function Header() {
             arrowIcon={false}
             inline
             label={
+              <>
               <Avatar 
                 alt={user.firstName} 
                 img={user.image} 
                 rounded 
-              />
+                />
+                {cart.length !== 0 && <span className="bg-orange-600 h-6 w-6 rounded-full text-white self-start">{cart.length}</span>}
+                </>
             }
           >
+            
             <DropdownHeader>
               <span className="block text-sm font-medium">
                 {user.firstName} {user.lastName}
@@ -61,7 +67,11 @@ export default function Header() {
             </DropdownHeader>
             <DropdownItem onClick={handleCartClick}>
               Cart
-            </DropdownItem>
+              {cart.length > 0 && (
+                <span className="bg-orange-600 h-5 w-5 rounded-full ms-3 text-white flex items-center justify-center text-xs">
+                  {cart.length > 99 ? "99+" : cart.length}
+                </span>
+              )}            </DropdownItem>
             <DropdownDivider />
             <DropdownItem onClick={handleLogout}>
               Sign out

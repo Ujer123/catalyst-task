@@ -27,10 +27,10 @@ export async function POST() {
     return response;
   }
 
-  const response = NextResponse.json({ success: true, token: newToken });
+  const response = NextResponse.json({ success: true });
   response.cookies.set('dummy_token', newToken, {
     httpOnly: true,
-    secure: false,
+    secure: true,
     sameSite: 'strict',
     maxAge: 60 * 60 * 24 * 7,
     path: '/',
